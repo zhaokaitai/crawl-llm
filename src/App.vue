@@ -4,8 +4,8 @@
     <div class="layer2"></div>
     <div class="layer3"></div>
     <el-container>
-      <el-header>
-        <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" :ellipsis="false"
+      <el-header v-show="store.state.showHeader">
+        <el-menu :default-active="activeIndex" class="el-menu" mode="horizontal" :ellipsis="false"
           @select="handleSelect">
           <el-menu-item index="home">
             <img style="width: 100px" src="./images/element-plus-logo.svg" alt="logo" />
@@ -32,6 +32,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import router from './router';
+import store from './store';
 
 const activeIndex = ref('0')
 const avatarText = ref('登录')
@@ -39,7 +40,7 @@ const avatarText = ref('登录')
 
 const handleSelect = (key: string) => {
   if (key === 'console') {
-    console.log('跳转控制台');
+    router.replace({ name: 'console' });
   } else {
     router.push({ name: key });
   }
@@ -55,6 +56,7 @@ const handleSelect = (key: string) => {
   left: 0;
   overflow-y: auto;
   background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+  z-index: -999;
 
   @function getShadows($n) {
     $shadows: '#{random(100)}vw #{random(100)}vh #fff';
@@ -85,6 +87,7 @@ const handleSelect = (key: string) => {
       top: 0;
       box-shadow: getShadows($count);
       animation: moveUp $duration linear infinite;
+      z-index: -998;
 
       &::after {
         content: '';
@@ -95,6 +98,7 @@ const handleSelect = (key: string) => {
         height: $size;
         border-radius: inherit;
         box-shadow: inherit;
+        z-index: inherit;
       }
     }
   }
@@ -109,6 +113,8 @@ const handleSelect = (key: string) => {
 .el-header {
   --el-header-padding: 0 10vw;
   font-weight: bolder;
+  position: sticky;
+  top: 0;
 
   .el-menu--horizontal {
     --el-menu-horizontal-height: 100px;
