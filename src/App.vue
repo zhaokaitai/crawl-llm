@@ -4,7 +4,7 @@
     <div class="layer2"></div>
     <div class="layer3"></div>
     <el-container>
-      <el-header v-show="store.state.showHeader">
+      <el-header v-show="store.getters.showHeader">
         <el-menu :default-active="activeIndex" class="el-menu" mode="horizontal" :ellipsis="false"
           @select="handleSelect">
           <el-menu-item index="home">
@@ -12,14 +12,15 @@
           </el-menu-item>
           <el-menu-item index="playground">Playground</el-menu-item>
           <el-menu-item index="buy">购买</el-menu-item>
-          <el-menu-item index="console">控制台</el-menu-item>
+          <el-menu-item index="console" v-show="store.getters.isLogin">控制台</el-menu-item>
           <el-menu-item index="my">
             <div class="avatar">
-              <el-avatar src="https://c-ssl.dtstatic.com/uploads/blog/202304/15/20230415081411_f2e46.thumb.400_0.jpg">
-                {{ avatarText }}
-              </el-avatar>
+              <img v-if="store.getters.isLogin"
+                src="https://c-ssl.dtstatic.com/uploads/blog/202304/15/20230415081411_f2e46.thumb.400_0.jpg" />
+              <div v-else>登录</div>
             </div>
           </el-menu-item>
+          <el-menu-item style="margin-left: -30px;" index="logout" v-show="store.getters.isLogin">退出登录</el-menu-item>
         </el-menu>
       </el-header>
       <el-main>
@@ -35,12 +36,11 @@ import router from './router';
 import store from './store';
 
 const activeIndex = ref('0')
-const avatarText = ref('登录')
 
 
 const handleSelect = (key: string) => {
-  if (key === 'console') {
-    router.replace({ name: 'console' });
+  if (key === 'logout') {
+    store.commit('setIsLogin', false);
   } else {
     router.push({ name: key });
   }
@@ -49,13 +49,15 @@ const handleSelect = (key: string) => {
 
 <style lang="scss" scoped>
 .common-layout {
+  $background: v-bind("store.getters.background");
+
   position: absolute;
   width: 100%;
   height: 100%;
   top: 0;
   left: 0;
   overflow-y: auto;
-  background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+  background: unquote($background);
   z-index: -999;
 
   @function getShadows($n) {
@@ -132,14 +134,22 @@ const handleSelect = (key: string) => {
 
       .avatar {
         display: flex;
+        border: 1px solid #828282;
+        border-radius: 50%;
+        width: 36px;
+        height: 36px;
+        align-items: center;
+        justify-content: center;
 
-        div {
-          flex: 1;
-          text-align: center;
+        &:focus,
+        &:hover {
+          border-color: #fff;
         }
 
-        div:not(:last-child) {
-          border-right: 1px solid var(--el-border-color);
+        img {
+          width: inherit;
+          height: inherit;
+          border-radius: inherit;
         }
       }
 
@@ -154,7 +164,7 @@ const handleSelect = (key: string) => {
         color: #fff !important;
       }
 
-      @for $i from 1 through 5 {
+      @for $i from 1 through 6 {
         &:nth-child(#{$i}) {
           &.is-active {
             border-bottom: 2px solid transparent;
