@@ -1,11 +1,11 @@
 <template>
   <div class="common-layout">
-    <div class="layer1"></div>
-    <div class="layer2"></div>
-    <div class="layer3"></div>
+    <div class="layer1" v-show="store.getters.showHeader"></div>
+    <div class="layer2" v-show="store.getters.showHeader"></div>
+    <div class="layer3" v-show="store.getters.showHeader"></div>
     <el-container>
       <el-header v-show="store.getters.showHeader">
-        <el-menu :default-active="activeIndex" class="el-menu" mode="horizontal" :ellipsis="false"
+        <el-menu default-active="0" class="el-menu" mode="horizontal" :ellipsis="false"
           @select="handleSelect">
           <el-menu-item index="home">
             <img style="width: 100px" src="./images/element-plus-logo.svg" alt="logo" />
@@ -31,12 +31,8 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
 import router from './router';
 import store from './store';
-
-const activeIndex = ref('0')
-
 
 const handleSelect = (key: string) => {
   if (key === 'logout') {
@@ -48,6 +44,31 @@ const handleSelect = (key: string) => {
 </script>
 
 <style lang="scss" scoped>
+/*定义滚动条宽高及背景，宽高分别对应横竖滚动条的尺寸*/
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+/*定义滚动条的轨道颜色、内阴影及圆角*/
+::-webkit-scrollbar-track {
+  border-radius: 4px;
+  -webkit-box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.2);
+  background-color: #1a1a1a;
+}
+
+/*定义滑块颜色、内阴影及圆角*/
+::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  background-color: #f3e0c7;
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+}
+
+/*定义滑块悬停变化颜色、内阴影及圆角*/
+::-webkit-scrollbar-thumb:hover {
+  background-color: #f0bf7e;
+}
+
 .common-layout {
   $background: v-bind("store.getters.background");
 
@@ -143,7 +164,7 @@ const handleSelect = (key: string) => {
 
         &:focus,
         &:hover {
-          border-color: #fff;
+          border-color: #f3e0c7;
         }
 
         img {
@@ -155,13 +176,13 @@ const handleSelect = (key: string) => {
 
       &.is-active {
         background: none;
-        color: #fff !important;
+        color: #f3e0c7 !important;
       }
 
       &:not(.is-disabled):focus,
       &:not(.is-disabled):hover {
         background: none;
-        color: #fff !important;
+        color: #f3e0c7 !important;
       }
 
       @for $i from 1 through 6 {
