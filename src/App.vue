@@ -5,8 +5,7 @@
     <div class="layer3" v-show="store.getters.showHeader"></div>
     <el-container>
       <el-header v-show="store.getters.showHeader">
-        <el-menu default-active="0" class="el-menu" mode="horizontal" :ellipsis="false"
-          @select="handleSelect">
+        <el-menu default-active="0" class="el-menu" mode="horizontal" :ellipsis="false" @select="handleSelect">
           <el-menu-item index="home">
             <img style="width: 100px" src="./images/element-plus-logo.svg" alt="logo" />
           </el-menu-item>
@@ -26,6 +25,7 @@
       <el-main>
         <router-view />
       </el-main>
+      <el-footer v-show="store.getters.showHeader">欢迎使用</el-footer>
     </el-container>
   </div>
 </template>
@@ -138,6 +138,7 @@ const handleSelect = (key: string) => {
   font-weight: bolder;
   position: sticky;
   top: 0;
+  z-index: 1;
 
   .el-menu--horizontal {
     --el-menu-horizontal-height: 100px;
@@ -208,5 +209,12 @@ const handleSelect = (key: string) => {
   --el-main-padding: 0;
   display: flex;
   justify-content: center;
+}
+
+.el-footer{
+  color: #fff;
+  padding: 0 10vw;
+  margin-top: 3vw;
+  background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
 }
 </style>
